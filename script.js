@@ -1,6 +1,25 @@
+//create variables that are gonna store the selections
 let computerSelection;
 let userSelection;
+//create options for user to choose his selection,
+//get the selection from user, make it case insensitive
+const rock = document.querySelector("#rock");
+const paper = document.querySelector("#paper");
+const scissors = document.querySelector("#scissors");
 
+rock.addEventListener("click", () => {
+    userSelection = "ROCK";
+    playRound();
+});
+paper.addEventListener("click", () => {
+    userSelection = "PAPER";
+    playRound();
+});
+scissors.addEventListener("click", () => {
+    userSelection = "SCISSORS";
+    playRound();
+});
+//create function that makes random selection for computer
 function computerPlay(){
     let randomNum = Math.floor(Math.random() * 3);
 
@@ -13,90 +32,103 @@ function computerPlay(){
     }
 }
 
+//create variables that are gonna keep score for each
+//player
+let userScore = 0;
+let compScore = 0;
 
-function getuserSelection() {
-    let selection = prompt("Let's play Rock, Paper, Scissors! \
-                           \nAdd your selection below:", "");
+//create variables that will select the html elements
+//where the results will be shown
+let resultPara = document.querySelector("#resultPara");
+let scorePara = document.querySelector("#scorePara");
 
-    userSelection = selection.toUpperCase();
+//create a function that plays one round, increment the
+//score for each winner, display the winner by text
+resultPara.textContent = "Click a symbol to play";
+scorePara.textContent = `Your score: ${userScore} | Computer Score: ${compScore}`;
 
-    if (userSelection === "ROCK" || userSelection === "PAPER" || userSelection === "SCISSORS"){
-        return userSelection;
-       }else {
-        userSelection = false;
-        alert("Error! \
-        \nYour answer must be either Rock, Paper, or Scissors.\
-        \nTry Again!");
-       }
-}
-
-let winner;
-
-function play(){
+function playRound() {
+    computerPlay();
     if (userSelection === "ROCK") {
         if (computerSelection === "PAPER"){
-            winner = "computer";
-            alert("You loose! Paper beats rock!")
+            compScore++;
+            resultPara.textContent = "You loose! Paper beats rock!";
+            scorePara.textContent = `Your score: ${userScore} | Computer Score: ${compScore}`;
         }else if(computerSelection === "SCISSORS"){
-            winner = "user";
-            alert("You win! Rock beats Scissors")
+            userScore++;
+            resultPara.textContent = "You win! Rock beats Scissors";
+            scorePara.textContent = `Your score: ${userScore} | Computer Score: ${compScore}`;
         }else if (computerSelection === "ROCK"){
-            winner = null;
-            alert("It's a tie");
+            
+            resultPara.textContent = "It's a tie";
+            scorePara.textContent = `Your score: ${userScore} | Computer Score: ${compScore}`;
         }
     }else if (userSelection === "PAPER"){
         if (computerSelection === "ROCK"){
-            winner = "user";
-            alert("You win! Paper beats Rock!");
+            userScore++;
+            resultPara.textContent = "You win! Paper beats Rock!";
+            scorePara.textContent = `Your score: ${userScore} | Computer Score: ${compScore}`;
         }else if(computerSelection === "SCISSORS"){
-            winner = "computer";
-            alert("You loose! Scissors beat Paper!")
+            compScore++;
+            resultPara.textContent = "You loose! Scissors beat Paper!";
+            scorePara.textContent = `Your score: ${userScore} | Computer Score: ${compScore}`;
         }else if (computerSelection === "PAPER"){
-            winner = null;
-            alert("It's a tie");
+            
+            resultPara.textContent = "It's a tie";
+            scorePara.textContent = `Your score: ${userScore} | Computer Score: ${compScore}`;
         }
     }else if (userSelection === "SCISSORS") {
         if (computerSelection === "ROCK"){
-            winner = "computer";
-            alert("You loose! Rock beats Scissors!");
+            compScore++;
+            resultPara.textContent = "You loose! Rock beats Scissors!";
+            scorePara.textContent = `Your score: ${userScore} | Computer Score: ${compScore}`;
         }else if(computerSelection === "PAPER"){
-            winner = "user";
-            alert("You win! Scissors beat paper!")
+            userScore++;
+            resultPara.textContent = "You win! Scissors beat paper!";
+            scorePara.textContent = `Your score: ${userScore} | Computer Score: ${compScore}`;
         }else if (computerSelection === "SCISSORS"){
-            winner = null
-            alert("It's a tie");
+            
+            resultPara.textContent = "It's a tie";
+            scorePara.textContent = `Your score: ${userScore} | Computer Score: ${compScore}`;
         }
     }
+    checkScore();
 }
 
 
-let userWins = 0;
-let computerWins = 0;
+//create a function that is gonna keep playing while
+//score is less than 5 and return the results and 
+//winner of the game
+const content = document.querySelector(".content");
+function checkScore() {
+    if (userScore === 5 || compScore === 5){
+        const score = document.createElement("h3");
+        const winner = document.createElement("h1");
+        const a = document.createElement("a"); //to reload the game
+        const link = document.createTextNode("Play Again")
+        
+        content.textContent = "";
+        if (userScore === 5) {
+            winner.textContent = `Game Over! YOU WIN`;
+            winner.style.cssText = "background-color: rgba(58, 245, 21, 0.596);\
+            padding: 50px;\
+            border-radius: 10px;";
+        }else{
+                winner.textContent = `Game Over! YOU LOOSE`;
+                winner.style.cssText = "background-color: rgba(243, 8, 8, 0.596);\
+                padding: 50px;\
+                border-radius: 10px;";
+            }
 
-function game(){
-    let games = 0;
+        score.textContent = `Your score: ${userScore} | Computer Score: ${compScore}`;
+        
+        a.appendChild(link);
+        a.href = "index.html";
+        a.title = "Play Again";
+        
 
-    while (games < 5){
-        computerPlay();
-        getuserSelection();
-        play();
-        if (userSelection) {games++;}
-
-        if (winner === "user"){
-            userWins++;
-        }else if(winner === "computer"){
-            computerWins++;
-        }
+        content.appendChild(winner);
+        content.appendChild(score);
+        content.appendChild(a);
     }
-    
-    if (userWins > computerWins){
-        alert("GAME OVER! Your wins: " + userWins + " | Computer wins: " + computerWins + "\nYOU WIN!");
-    }else if(userWins < computerWins){
-        alert("GAME OVER! Your wins: " + userWins + " | Computer wins: " + computerWins + "\nYOU LOOSE!");
-    }else{
-        alert("GAME OVER! Your wins: " + userWins + " | Computer wins: " + computerWins + "\nIT'S A TIE");
-    }
-    
 }
-
-game();
